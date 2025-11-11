@@ -315,13 +315,11 @@ ggsave(
   width = 6.5, height = 5.5, dpi = 300, bg = "white"
 )
 
-
-## Same figure but for Rose hydrophobicity not Kyte-Doolittle
-
-base_ScScatRose <-
+## Same figure but for Hessa hydrophobicity
+base_ScScatHessa <-
   ggplot(labelled_df, aes(
     x = window_length,
-    y = rose_max_hydropathy
+    y = Hessa_max_hydropathy
   )) +
   geom_point(aes(
     colour = `Experimental label`,
@@ -332,7 +330,7 @@ base_ScScatRose <-
   # ggtitle("Phobius detected SP/TM regions") +
   scale_x_helix_length +
   # scale_y_KD_hydropathy +
-  scale_y_continuous("Rose max. hydropathy") +
+  scale_y_continuous("Hessa max. hydropathy") +
   scale_colour_manual(breaks = breaks_explabel, values = colour_explabel) +
   scale_size_manual(breaks = breaks_explabel, values = size_explabel) +
   theme(
@@ -342,7 +340,7 @@ base_ScScatRose <-
     plot.margin = unit(c(.1, .1, .1, .1), "mm")
   )
 
-side_ScScatRose <-
+side_ScScatHessa <-
   ggplot(
     labelled_df %>%
       dplyr::mutate(
@@ -352,12 +350,12 @@ side_ScScatRose <-
           )
       ),
     aes(
-      y = rose_max_hydropathy,
+      y = Hessa_max_hydropathy,
       fill = `Experimental label`,
       group = `Experimental label`
     )
   ) +
-  geom_histogram(binwidth = 0.01) +
+  geom_histogram(binwidth = 0.1) +
   # scale_y_KD_hydropathy +
   scale_fill_manual(breaks = breaks_explabel, values = colour_explabel) +
   facet_grid(. ~ `Experimental label`, scales = "free_x") +
@@ -372,33 +370,32 @@ side_ScScatRose <-
   )
 
 
-ScRose_scatter_marginals_plot <-
+ScHessa_scatter_marginals_plot <-
   plot_grid(top_ScScatMarg,
     get_legend(base_ScScatMarg),
-    base_ScScatRose +
+    base_ScScatHessa +
       theme(legend.position = "none"),
-    side_ScScatRose,
+    side_ScScatHessa,
     ncol = 2,
     align = "hv",
     axis = "bl",
     rel_heights = c(0.6, 1),
     rel_widths = c(1, 0.75)
   )
-ScRose_scatter_marginals_plot
+ScHessa_scatter_marginals_plot
 
 # save plot
 ggsave(
-  filename = here("results", "figures", "ScHydropathy_scatter_marginals_Rose.pdf"),
-  plot = ScRose_scatter_marginals_plot,
+  filename = here("results", "figures", "ScHydropathy_scatter_marginals_Hessa.pdf"),
+  plot = ScHessa_scatter_marginals_plot,
   width = 6.5, height = 5.5, dpi = 300
 )
 
 ggsave(
-  filename = here("results", "figures", "ScHydropathy_scatter_marginals_Rose.png"),
-  plot = ScRose_scatter_marginals_plot,
+  filename = here("results", "figures", "ScHydropathy_scatter_marginals_Hessa.png"),
+  plot = ScHessa_scatter_marginals_plot,
   width = 6.5, height = 5.5, dpi = 300, bg = "white"
 )
-
 
 
 # Figure 4 - histograms of window lengths for each species
@@ -626,8 +623,8 @@ deepphob_match_plot <-
     x = "Phobius predicted length",
     y = "DeepTMHMM predicted length"
   ) +
-  scale_x_continuous(breaks = seq(0,100,10)) + 
-  scale_y_continuous(breaks = seq(0,100,10))
+  scale_x_continuous(breaks = seq(0, 100, 10)) +
+  scale_y_continuous(breaks = seq(0, 100, 10))
 
 deepphob_match_plot
 

@@ -58,16 +58,23 @@ S_Cerevisiae <- phobius_df %>%
 rose <- scales[, c("aa", "Rose")]
 colnames(rose) <- c("V1", "V2")
 
+# extract Hessa scale
+Hessa <- scales[, c("aa", "Hessa")]
+colnames(Hessa) <- c("V1", "V2")
+
 # read protein sequence and calculate hydropathy for KD and Rose
 AA_stringset <- readAAStringSet(here("data", "proteins", "pub", "S_Cerevisiae.fasta"))
 KD_df <- add_compound_hydropathy_score(S_Cerevisiae, AA_stringset, scale = KD, include_max = TRUE)
 rose_df <- add_compound_hydropathy_score(S_Cerevisiae, AA_stringset, scale = rose, include_max = TRUE)
+Hessa_df <- add_compound_hydropathy_score(S_Cerevisiae, AA_stringset, scale = Hessa, include_max = TRUE)
 
 # rename and join
 KD_df <- KD_df %>% rename(compound_hydropathy = "KD_hydropathy", max_hydropathy = "KD_max_hydropathy")
 rose_df <- rose_df %>% rename(compound_hydropathy = "rose_hydropathy", max_hydropathy = "rose_max_hydropathy")
+Hessa_df <- Hessa_df %>% rename(compound_hydropathy = "Hessa_hydropathy", max_hydropathy = "Hessa_max_hydropathy")
 SC_output <- KD_df %>%
-  inner_join(rose_df %>% select(seqid, rose_hydropathy, rose_max_hydropathy), by = "seqid")
+  inner_join(rose_df %>% select(seqid, rose_hydropathy, rose_max_hydropathy), by = "seqid") %>%
+  inner_join(Hessa_df %>% select(seqid, Hessa_hydropathy, Hessa_max_hydropathy), by = "seqid")
 
 # write to file
 write.csv(SC_output, here("results", "figures", "SC_first_60.csv"), row.names = FALSE)
