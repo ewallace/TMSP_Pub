@@ -15,3 +15,4 @@ Ustilago maydis 521	U_Maydis.fasta	Ustilago maydis
 Cryptococcus neoformans var. grubii H99	C_Neoformans.fasta	Cryptococcus neoformans
 Rhizopus delemar RA 99-880	R_Delemar.fasta	Rhizopus delemar
 Batrachochytrium dendrobatidis JEL423	B_Dendrobatitis.fasta	Batrachochytrium dendrobatidis
+Trichoderma reesei QM6a	T_reesei.fasta	Trichoderma reesei

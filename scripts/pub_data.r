@@ -12,7 +12,7 @@ source(here("src", "hydrophobicity.r"))
 # --- Run all sequences through phobius --- #
 
 # attach path to protein file names
-species_df <- here("data", "proteins", "pub", "proteome_table.txt") %>%
+species_df <- here("data", "proteins", "pub", "proteome_table_fungi.txt") %>%
   read_tsv(comment = "#") %>%
   # Next line makes Nicename a factor in same order as given
   mutate(
@@ -172,7 +172,6 @@ new_species_df <- here("data", "proteins", "full", "proteome_table.txt") %>%
   read_tsv(comment = "#") %>%
   mutate(Nicename = as_factor(Nicename))
 new_protein_paths <- here("data", "proteins", "full", new_species_df$Filename)
-new_species_names <- new_species_df$Nicename
 
 # read in protein sequences
 new_proteins <- lapply(new_protein_paths, readAAStringSet)
@@ -182,5 +181,119 @@ new_proteins <- lapply(new_proteins, function(x) x[width(x) >= 60])
 # subset to first 60 amino acids
 new_proteins <- lapply(new_proteins, function(x) subseq(x, start = 1, end = 60))
 
-# run phobius
+# write to pub and run phobius
+subset_paths <- c()
+for (i in seq_along(new_proteins)) {
+  # remove the .fasta extension
+  file_name <- str_split(new_species_df$Filename[i], "\\.")[[1]][1]
+  # create the path
+  subset_path <- here("data", "proteins", "pub", paste(file_name, "_first_60.fasta", sep = ""))
+  # write the file
+  writeXStringSet(new_proteins[[i]], subset_path)
+  subset_paths <- c(subset_paths, subset_path)
+}
+
+
+# === plot full length phobius results === #
+new_phobius_results <- lapply(subset_paths, run_phobius)
+
+for (i in 1:length(new_phobius_results)) {
+  new_phobius_results[[i]] <- new_phobius_results[[i]] %>%
+    filter(phobius_end != 0) %>%
+    mutate(window_length = phobius_end - phobius_start + 1) %>%
+    mutate(species = new_species_df$Filename[i])
+}
+
+# join and reset row names
+phobius_df <- do.call(rbind, new_phobius_results)
+rownames(phobius_df) <- NULL
+
+# plot helix length axis
+lower <- 5
+upper <- 34
+helix_delim <- seq(lower, upper, 5)
+helix_minor <- seq(lower, upper, 5)
+helix_limits <- c(lower, upper)
+scale_x_helix_length <-
+  scale_x_continuous("Predicted helix length (AA)",
+    breaks = helix_delim,
+    limits = helix_limits,
+    minor_breaks = helix_minor,
+    expand = expansion(mult = 0, add = 0.6)
+  )
+
+phobius_plot <-
+  ggplot(phobius_df, aes(x = window_length, fill = phobius_type)) +
+  geom_histogram(binwidth = 1, center = 0) +
+  geom_vline(xintercept = 13.5, linetype = "dashed") +
+  facet_wrap(~species,
+    scales = "free_y", ncol = 1,
+    strip.position = "left"
+  ) +
+  scale_y_continuous("Number of proteins", position = "right") +
+  scale_x_helix_length +
+  scale_fill_manual("Phobius prediction",
+    values = c("SP" = "skyblue3", "TM" = "indianred")
+  ) +
+  theme(
+    legend.position = "bottom",
+    strip.text.y.left = element_text(face = "italic", angle = 0),
+    strip.placement = "outside"
+  )
+
+# --- Plots for industry-relevant species --- #
+new_species_df <- here("data", "proteins", "pub", "proteome_table_industry.txt") %>%
+  read_tsv(comment = "#") %>%
+  mutate(Nicename = as_factor(Nicename))
+new_protein_paths <- here("data", "proteins", "pub", new_species_df$Filename)
+
 new_phobius_results <- lapply(new_protein_paths, run_phobius)
+
+for (i in 1:length(new_phobius_results)) {
+  new_phobius_results[[i]] <- new_phobius_results[[i]] %>%
+    filter(phobius_end != 0) %>%
+    mutate(window_length = phobius_end - phobius_start + 1) %>%
+    mutate(species = new_species_df$Nicename[i])
+}
+
+# join and reset row names
+phobius_df <- do.call(rbind, new_phobius_results)
+rownames(phobius_df) <- NULL
+
+# plot helix length axis
+lower <- 5
+upper <- 34
+helix_delim <- seq(lower, upper, 5)
+helix_minor <- seq(lower, upper, 5)
+helix_limits <- c(lower, upper)
+scale_x_helix_length <-
+  scale_x_continuous("Predicted helix length (AA)",
+    breaks = helix_delim,
+    limits = helix_limits,
+    minor_breaks = helix_minor,
+    expand = expansion(mult = 0, add = 0.6)
+  )
+
+phobius_plot <-
+  ggplot(phobius_df, aes(x = window_length, fill = phobius_type)) +
+  geom_histogram(binwidth = 1, center = 0) +
+  geom_vline(xintercept = 13.5, linetype = "dashed") +
+  facet_wrap(~species,
+    scales = "free_y", ncol = 1,
+    strip.position = "left"
+  ) +
+  scale_y_continuous("Number of proteins", position = "right") +
+  scale_x_helix_length +
+  scale_fill_manual("Phobius prediction",
+    values = c("SP" = "skyblue3", "TM" = "indianred")
+  ) +
+  theme(
+    legend.position = "bottom",
+    strip.text.y.left = element_text(face = "italic", angle = 0),
+    strip.placement = "outside"
+  )
+
+ggsave(here("results", "figures", "phobius_industry_species.png"),
+  plot = phobius_plot,
+  width = 6, height = 8, units = "in", dpi = 300
+)

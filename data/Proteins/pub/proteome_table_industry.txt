@@ -1,0 +1,7 @@
+# proteome_table_industry.txt
+# Species names for proteomes relevant to industry (reviewer request)
+# Pichia pastoris UniProt ID: UP000094565
+#
+FungiDB_id	Filename	Nicename
+Trichoderma reesei QM6a	T_reesei.fasta	Trichoderma reesei
+Pichia pastoris	P_pastoris_first_60.fasta	Pichia pastoris
