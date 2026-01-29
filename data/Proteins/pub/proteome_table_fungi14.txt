@@ -1,0 +1,21 @@
+# proteome_table.txt
+# Species names for proteomes
+# in rough phylogenetic order for figure making
+# Added species names for relevant to industry: K. phaffii and P. pastoris.
+#
+FungiDB_id	Filename	Nicename
+Saccharomyces cerevisiae S288C	S_Cerevisiae.fasta	Saccharomyces cerevisiae
+Candida albicans SC5314	C_Albicans.fasta	Candida albicans
+Komagataella phaffii UP000094565	P_pastoris_first_60.fasta	Pichia pastoris
+Trichoderma reesei QM6a	T_reesei.fasta	Trichoderma reesei
+Neurospora crassa OR74A	N_Crassa.fasta	Neurospora crassa
+Pyricularia oryzae BR32	P_Oryzae.fasta	Magnaporthe grisea
+Zymoseptoria tritici IPO323	Z_Tritici.fasta	Zymoseptoria tritici
+Aspergillus fumigatus Af293	A_Fumigatus.fasta	Aspergillus fumigatus
+Schizosaccharomyces pombe 972h-	S_Pombe.fasta	Schizosaccharomyces pombe
+Puccinia graminis f. sp. tritici CRL 75-36-700-3	P_Graminis.fasta	Puccinia graminis
+Ustilago maydis 521	U_Maydis.fasta	Ustilago maydis
+Cryptococcus neoformans var. grubii H99	C_Neoformans.fasta	Cryptococcus neoformans
+Rhizopus delemar RA 99-880	R_Delemar.fasta	Rhizopus delemar
+Batrachochytrium dendrobatidis JEL423	B_Dendrobatitis.fasta	Batrachochytrium dendrobatidis
+Trichoderma reesei QM6a	T_reesei.fasta	Trichoderma reesei

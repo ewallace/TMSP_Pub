@@ -145,26 +145,26 @@ phobius_cladogram_plot <- function(species_table, tree_string) {
 
   # Make fungal species tree / cladogram to inform phobius plot
   # first define the tree in newick format, read in to treeio format
-  fungal12tree_data <- tree_string %>%
+  fungaltree_data <- tree_string %>%
     textConnection() %>%
     read.newick()
 
   # Plot the tree using ggtree.
   # ladderize = FALSE preserves input tip order.
-  fungal12tree_plot <-
-    ggtree(fungal12tree_data,
+  fungaltree_plot <-
+    ggtree(fungaltree_data,
       ladderize = FALSE
     ) +
     # geom_tiplab here would print the tip labels, useful for checking.
     # geom_tiplab() +
     scale_y_reverse()
 
-  fungal12tree_plot
+  fungaltree_plot
 
   # make composite plot, including moving the y-axis title
   phobius_composite_plot <-
     plot_grid(
-      fungal12tree_plot +
+      fungaltree_plot +
         theme(plot.margin = margin(t = 0, r = 0, b = 0.55, l = 0, unit = "in")),
       phobius_plot,
       nrow = 1,
