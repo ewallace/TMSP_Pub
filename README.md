@@ -6,8 +6,10 @@ This repository accompanies the paper:
 
 > Protein secretion routes in fungi are mostly determined by the length of the hydrophobic helix in the signal peptide.
 >
-> Tristan Sones-Dykes, Atlanta Cook, Edward Wallace.
+> Tristan Sones-Dykes, Edward Wallace.
 >
+> bioRxiv preprint
+> 
 > DOI: https://doi.org/10.1101/2025.07.30.667231
 
 The analysis here was performed by:
